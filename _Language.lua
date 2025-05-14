@@ -3,6 +3,7 @@ _Language = {
     ["zhomes.prefix"] = "&8[&azHomes&8]&r ",
     ["zhomes.too_many_arguments"] = "&7Too many arguments! (expected: {0}, found: {1})",
     ["zhomes.on_cooldown"] = "You must wait {0} second(s) before you can run that command!",
+    ["zhomes.reloaded"] = "&aYou reload the zHomes plugin. &7(version: {0})",
 
     --// Command Messages
     ["zhomes.teleport.command"] = "home",
