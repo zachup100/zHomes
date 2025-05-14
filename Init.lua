@@ -2,11 +2,17 @@ PluginManager = cPluginManager
 RootDir =  "Plugins/zHomes"
 HomesDir =  ("%s/homes"):format(RootDir)
 PluginVersion = "1.0"
+PluginSource = "https://github.com/zachup100/zHomes"
 
 function Initialize(Plugin)
     _debug_out("Init.lua file was called")
     _debug_out("RootDir Path:", RootDir)
     _debug_out("HomesDir Path:", HomesDir)
+
+    if not cFile:IsFolder(HomesDir) then
+        cFile:CreateFolder(HomesDir)
+    end
+
     local _Modules =  ("%s/modules"):format(RootDir)
     local _Commands =  ("%s/commands"):format(RootDir)
     _debug_out("_Modules Path:", _Modules)
@@ -19,6 +25,18 @@ function Initialize(Plugin)
     _output(" | Made with 💗. (Author: zachup100)")
     _debug_out("API Version:", Plugin:GetVersion())
 
+    if not cFile:IsFolder(_Modules) then
+        _output("It seems that the Modules directory is missing! Please make sure you download the latest version from the Github!")
+        _output("Github:", PluginSource)
+        error("Missing Modules directory")
+    end
+
+    if not cFile:IsFolder(_Commands) then
+        _output("It seems that the Commands directory is missing! Please make sure you download the latest version from the Github!")
+        _output("Github:", PluginSource)
+        error("Missing Commands directory")
+    end
+
     --// Load Modules
     _LoadLuaFile(("%s/json.lua"):format(_Modules), true)
     _LoadLuaFile(("%s/HomeManager.lua"):format(_Modules), true)
@@ -30,6 +48,7 @@ function Initialize(Plugin)
     _LoadLuaFile(("%s/sethome.lua"):format(_Commands), false)
     _LoadLuaFile(("%s/delhome.lua"):format(_Commands), false)
     _LoadLuaFile(("%s/homes.lua"):format(_Commands), false)
+    _LoadLuaFile(("%s/reload.lua"):format(_Commands), false)
 
     --// Register and bind commands
     PluginManager.BindCommand(
@@ -60,41 +79,18 @@ function Initialize(Plugin)
         _Language["zhomes.teleport.description"]
     )
 
+    PluginManager.BindCommand(
+        "/homereload",
+        PluginPermissions["reload"],
+        _reload_plugin,
+        " - Reloads the zHomes plugin from in-game"
+    )
+
     _output("Commands Registered")
     _output("Plugin has started!")
     return true
 end
 
---//
---// PLEASE DO NOT EDIT ANYTHING UNDER HERE UNLESS YOU KNOW WHAT YOU ARE DOING
---// Comments are left for myself, and as well so others can understand and learn!
---//
-
---// A safe-way of calling/loading a Lua File that isn't present in the root directory.
---// Cuberite only seems to load .lua files if they're in the root directory
-function _LoadLuaFile(file, disableOnFail)
-    local Success, Result = pcall(dofile, file)
-    if not Success then
-        _debug_out(("An error occured while loading file '%s', returned: %s"):format(file, tostring(Result)))
-        if disableOnFail then error(("Failed to load file '%s', disabling plugin!"):format(file)) end
-        return false
-    end
-    return true
-end
-
---// Allows more than one argument when displaying console messages through LOG()
-function _output(...) LOG(_console_format({...})) end
-function _warn(...) LOGINFO("[WARN] " .. _console_format({...})) end
-function _error(...) LOGWARN("[ERROR] " .. _console_format({...})) end
-function _debug_out(...)
-    if PluginSettings["debugger"] then
-        LOG("[DEBUG] " .. _console_format({...}))
-    end
-end
-
---// Unpackages table inputs into strings that is readable to the console
-function _console_format(input)
-    local out = ""
-    for _, obj in pairs(input) do out = out .. tostring(obj) .. " " end 
-    return out
+function OnDisable()
+    _warn("zHomes has been disabled!")
 end

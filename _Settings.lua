@@ -44,6 +44,9 @@ PluginPermissions = {
     ["bypass"] = "zhomes.bypass",
     --// Allows the player to have more than the max home count (max_homes)
 
-    ["no_cooldown"] = "zhomes.cooldown"
+    ["no_cooldown"] = "zhomes.cooldown",
     --// Allows the player to bypass the cooldown for any command
+
+    ["reload"] = "zhomes.reload"
+    --// Allows access to the /homereload command (This is meant for staff / trust players!)
 }
