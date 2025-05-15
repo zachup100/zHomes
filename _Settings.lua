@@ -1,5 +1,5 @@
 PluginSettings = {
-    ["max_homes"] = 3, -- (Default: 1)
+    ["max_homes"] = 3, -- (Default: 3)
     --// How many homes are allowed per player!
 
     ["debugger"] = false, -- (Default: false)
